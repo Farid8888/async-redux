@@ -1,16 +1,18 @@
 import ReactDOM from "react-dom";
-import { createStore,combineReducers } from "redux";
-import cartShowReducer from "./components/store/cartShowReducer";
 import { Provider } from "react-redux";
-import cartReducer from "./components/store/cartReduucer";
 import "./index.css";
 import App from "./App";
+import {configureStore} from '@reduxjs/toolkit'
+import cartReducer from "./components/store/cartReduucer";
+import uiReducer from './components/store/cartShowReducer'
 
-const reducers =combineReducers({
+const store =configureStore({
+  reducer:{
     cart:cartReducer,
-    cartShow:cartShowReducer
+    ui:uiReducer
+  }
 })
-const store = createStore(reducers);
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

@@ -1,15 +1,27 @@
-
+import {createSlice} from '@reduxjs/toolkit'
 
 const initialState ={
     cartShow:false,
+    notification:null
 }
 
-
-const cartShowReducer =(state=initialState,action)=>{
-    if(action.type === 'SHOW'){
-        return {cartShow:!state.cartShow}
+const uiSlice = createSlice({
+    name:'ui',
+    initialState,
+    reducers:{
+        toggle(state){
+            state.cartShow = !state.cartShow
+        },
+        showNotification(state,action){
+            state.notification={
+            status:action.payload.status,
+            title:action.payload.title,
+            message:action.payload.message
+        }
     }
-    return state
 }
+})
 
-export default cartShowReducer
+export const uiActions = uiSlice.actions
+
+export default uiSlice.reducer

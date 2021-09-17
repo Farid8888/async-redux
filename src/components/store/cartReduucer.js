@@ -1,45 +1,48 @@
-import cartShowReducer from "./cartShowReducer"
 
+import {createSlice} from "@reduxjs/toolkit"
 
 
 const initialState = {
     items:[],
-    totalQuantity:0
+    totalQuantity:0,
+    changed:false
 }
-
-
-const cartReducer =(state=initialState,action)=>{
-    if(action.type === 'ADD ITEM'){
-     const total = state.totalQuantity + action.receiveItem.quantity  
-     let updateItems = []
-    const index = state.items.findIndex(item=>item.id === action.receiveItem.id)
-    const itemIndex = state.items[index] 
-     if(itemIndex){
-        const newItems =[...state.items]
-        const newItem = {...itemIndex,totalprice:itemIndex.totalprice + action.receiveItem.totalprice,quantity:itemIndex.quantity + action.receiveItem.quantity}
-        newItems[index]=newItem
-         updateItems=newItems
-     }else{
-         updateItems=state.items.concat(action.receiveItem)
-     }
-     return {items:updateItems,totalQuantity:total}
-     }
-     if(action.type === 'REMOVE ITEM'){
-        const total = state.totalQuantity - action.receiveItem.quantity  
-        let updateItems = []
-       const index = state.items.findIndex(item=>item.id === action.receiveItem.id)
-       const itemIndex = state.items[index] 
-        if(itemIndex && itemIndex.quantity >1){
-           const newItems =[...state.items]
-           const newItem = {...itemIndex,totalprice:itemIndex.totalprice - action.receiveItem.totalprice,quantity:itemIndex.quantity - action.receiveItem.quantity}
-           newItems[index]=newItem
-            updateItems=newItems
-        }else if(itemIndex.quantity === 1){
-            updateItems=state.items.filter(item=>item.id !== action.receiveItem.id)
+const cartSlice =createSlice({
+    name:'cart',
+    initialState,
+    reducers:{
+        replaceCart(state,action){
+            state.items = action.payload.items;
+            state.totalQuantity = action.payload.totalQuantity
+        },
+        addItem(state,action){
+           const newItem =action.payload 
+           const existingItem = state.items.find(item=>item.id === newItem.id)
+           state.totalQuantity = state.totalQuantity + newItem.quantity
+           state.changed = true
+           if(!existingItem){
+               state.items.push(newItem)
+           }else{
+             existingItem.quantity = existingItem.quantity + newItem.quantity
+             existingItem.totalprice = existingItem.totalprice + newItem.totalprice
+           }
+        },
+       removeItem(state,action){
+        const newItem =action.payload 
+        const existingItem = state.items.find(item=>item.id === newItem.id)
+        state.totalQuantity = state.totalQuantity - newItem.quantity
+        state.changed = true
+        if(existingItem && existingItem.quantity > 1){
+          existingItem.quantity = existingItem.quantity - newItem.quantity
+          existingItem.totalprice = existingItem.totalprice - newItem.totalprice
         }
-        return {items:updateItems,totalQuantity:total}   
-     }
-    return state
-}
+        else if(existingItem.quantity === 1){
+            state.items=state.items.filter(item=>item.id !== newItem.id)
+        }
+       }
+    }
+})
 
-export default cartReducer
+export const cartActions = cartSlice.actions
+
+export default cartSlice.reducer

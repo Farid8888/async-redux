@@ -1,28 +1,30 @@
 import classes from './CartItem.module.css';
 import {useSelector,useDispatch} from 'react-redux'
+import { cartActions } from '../store/cartReduucer';
+import { uiActions } from '../store/cartShowReducer';
 
 const CartItem = (props) => {
   const { title, quantity,  price, id ,description,totalprice} = props;
 const dispatch = useDispatch()
-const addItem=()=>{
-  dispatch({type:'ADD ITEM',receiveItem:{
-      totalprice:price,
-      price:price,
-      title:title,
-      description:description,
-      id:id,
-      quantity:1
-  }})
-}
-const removeItem =()=>{
-  dispatch({type:'REMOVE ITEM',receiveItem:{
+const addItemHandler=()=>{
+  dispatch(cartActions.addItem({
     totalprice:price,
     price:price,
     title:title,
     description:description,
     id:id,
     quantity:1
-  }})
+  }))
+}
+const removeItemHandler =()=>{
+  dispatch(cartActions.removeItem({
+    totalprice:price,
+    price:price,
+    title:title,
+    description:description,
+    id:id,
+    quantity:1
+  }))
 }
   return (
     <li className={classes.item}>
@@ -38,8 +40,8 @@ const removeItem =()=>{
           x <span>{quantity}</span>
         </div>
         <div className={classes.actions}>
-          <button type='button' onClick={removeItem}>-</button>
-          <button type='button' onClick={addItem}>+</button>
+          <button type='button' onClick={removeItemHandler}>-</button>
+          <button type='button' onClick={addItemHandler}>+</button>
         </div>
       </div>
     </li>
