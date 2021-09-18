@@ -4,7 +4,8 @@ import cartShowReducer from "./cartShowReducer"
 
 const initialState = {
     items:[],
-    totalQuantity:0
+    totalQuantity:0,
+    changed:false
 }
 
 
@@ -22,7 +23,7 @@ const cartReducer =(state=initialState,action)=>{
      }else{
          updateItems=state.items.concat(action.receiveItem)
      }
-     return {items:updateItems,totalQuantity:total}
+     return {items:updateItems,totalQuantity:total,changed:true}
      }
      if(action.type === 'REMOVE ITEM'){
         const total = state.totalQuantity - action.receiveItem.quantity  
@@ -37,8 +38,11 @@ const cartReducer =(state=initialState,action)=>{
         }else if(itemIndex.quantity === 1){
             updateItems=state.items.filter(item=>item.id !== action.receiveItem.id)
         }
-        return {items:updateItems,totalQuantity:total}   
+        return {items:updateItems,totalQuantity:total,changed:true}   
      }
+     if(action.type === 'REPLACE'){
+      return {items:action.cart.items,totalQuantity:action.cart.totalQuantity,changed:state.changed}
+    }
     return state
 }
 
