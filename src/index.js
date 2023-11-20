@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { createStore,combineReducers } from "redux";
 import cartShowReducer from "./components/store/cartShowReducer";
 import { Provider } from "react-redux";
@@ -24,9 +24,9 @@ const logger = store =>{
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(reducers,composeEnhancers(applyMiddleware(logger,thunk)));
-ReactDOM.render(
+const root =ReactDOM.createRoot(document.getElementById("root"))
+root.render(
   <Provider store={store}>
     <App />
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );

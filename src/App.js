@@ -14,7 +14,7 @@ function App() {
   const cartShow = useSelector(state=>state.cartShow.cartShow)
   const dispatch = useDispatch()
   const cart = useSelector(state=>state.cart)
-  console.log(cart)
+ 
   const notification = useSelector(state=>state.cartShow.notification)
   useEffect(()=>{
   dispatch(fetchCartData())
